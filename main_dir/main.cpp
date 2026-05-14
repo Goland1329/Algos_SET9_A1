@@ -6,7 +6,7 @@ using namespace std;
 
 long long char_comps = 0;
 
-bool compareStd(string s1, string s2) {
+bool compareStd(const string& s1, const string& s2) {
     bool b;
     int k = 0;
     
@@ -103,9 +103,9 @@ void stdQuickSort(vector<string>& vec1) {
     for (string i : greater) vec1[k++] = i;
 }
 
-pair<bool, int> lcpCompare(string s1, string s2) {
+pair<bool, int> lcpCompare(const string& s1, const string& s2 , int level) {
     bool b;
-    int k = 0;
+    int k = level;
     
     while(true) {
         if (k >= min(s1.length(), s2.length())) {
@@ -151,7 +151,7 @@ void mergeSort(vector<pair<string, int>>& vec1, int l, int r) {
             vec_temp.push_back(vec1[right_p++]);
         }
         else {
-            pair<bool, int> res = lcpCompare(vec1[left_p].first, vec1[right_p].first);
+            pair<bool, int> res = lcpCompare(vec1[left_p].first, vec1[right_p].first , vec1[left_p].second);
             if (res.first) {
                 vec_temp.push_back(vec1[left_p++]);
                 vec1[right_p].second = res.second;
@@ -374,33 +374,30 @@ public:
 
                     time_ms = measureTime([&]() -> double {
                         char_comps = 0; 
-                        auto start = chrono::high_resolution_clock::now();
-                        
-                        if (alg == 0) {
-                            vector<string> data = orig;
-                            stdQuickSort(data);
-                        } 
-                        else if (alg == 1) {
-                            vector<string> data = orig;
-                            stdMergeSort(data, 0, data.size() - 1);
-                        }
-                        else if (alg == 2) {
-                            vector<string> data = orig;
-                            quickSort(data, 0); 
-                        }
-                        else if (alg == 3) {
-                            vector<pair<string, int>> data_pairs(orig.size());
+                        vector<string> data = orig;
+                        vector<pair<string, int>> data_pairs(orig.size());
                             for(size_t i = 0; i < orig.size(); ++i) {
                                 data_pairs[i] = {orig[i], 0};
                             }
+                        
+                        auto start = chrono::high_resolution_clock::now();
+                        
+                        if (alg == 0) {
+                            stdQuickSort(data);
+                        } 
+                        else if (alg == 1) {
+                            stdMergeSort(data, 0, data.size() - 1);
+                        }
+                        else if (alg == 2) {
+                            quickSort(data, 0); 
+                        }
+                        else if (alg == 3) {
                             mergeSort(data_pairs, 0, data_pairs.size() - 1); 
                         }
                         else if (alg == 4) {
-                            vector<string> data = orig;
                             radixSort(data, 0); 
                         }
                         else if (alg == 5) {
-                            vector<string> data = orig;
                             radixQuickSort(data, 0); 
                         }
 
