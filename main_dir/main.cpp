@@ -109,7 +109,12 @@ pair<bool, int> lcpCompare(const string& s1, const string& s2 , int level) {
     
     while(true) {
         if (k >= min(s1.length(), s2.length())) {
-            b = false;
+            char_comps++;
+            if (s1.length() < s2.length()) {
+                b = true;
+            } else {
+                b = false;
+            }
             break;
         }
         
