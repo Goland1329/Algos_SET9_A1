@@ -12,7 +12,6 @@ bool compareStd(const string& s1, const string& s2) {
     
     while(true) {
         if (k >= min(s1.length(), s2.length())) {
-            char_comps++;
             if (s1.length() < s2.length()) {
                 b = true;
             } else {
@@ -28,10 +27,12 @@ bool compareStd(const string& s1, const string& s2) {
             continue;
         }
         else if (s1[k] < s2[k]) {
+            char_comps++;
             b = true;
             break;
         }
         else {
+            char_comps++;
             b = false;
             break;
         }
@@ -109,7 +110,6 @@ pair<bool, int> lcpCompare(const string& s1, const string& s2 , int level) {
     
     while(true) {
         if (k >= min(s1.length(), s2.length())) {
-            char_comps++;
             if (s1.length() < s2.length()) {
                 b = true;
             } else {
@@ -125,10 +125,12 @@ pair<bool, int> lcpCompare(const string& s1, const string& s2 , int level) {
             continue;
         }
         else if (s1[k] < s2[k]) {
+            char_comps++;
             b = true;
             break;
         }
         else {
+            char_comps++;
             b = false;
             break;
         }
@@ -195,9 +197,18 @@ void quickSort(vector<string>& vec1, int level) {
         if (i.length() <= level) vec1[k++] = i;
         else {
             char_comps++; 
-            if (i[level] < pivot) lesser.push_back(i);
-            else if (i[level] == pivot) equal.push_back(i);
-            else greater.push_back(i);
+            if (i[level] < pivot) {
+                lesser.push_back(i);
+            }
+            else if (i[level] == pivot)
+            {
+                equal.push_back(i);
+                char_comps++;
+            }
+            else {
+                greater.push_back(i);
+                char_comps++;
+            }
         }
     }
     
@@ -217,13 +228,12 @@ void radixSort(vector<string>& vec1, int level) {
     int right = vec1.size() - 1;
     
     vector<vector<string>> vec_res(128);
-    
+    int left_idx_clone = left;
     for (int i = 0; i < right - left + 1; ++i) {
         if (vec1[left + i].length() < level + 1) {
-            swap(vec1[left], vec1[i]);
-            ++left;   
+            swap(vec1[left_idx_clone], vec1[i]);
+            ++left_idx_clone;   
         } else {
-            char_comps++;
             vec_res[vec1[left + i][level]].push_back(vec1[left + i]);
         }
     }
@@ -233,7 +243,7 @@ void radixSort(vector<string>& vec1, int level) {
     }
     
     for (auto i : vec_res) {
-        for (string s : i) vec1[left++] = s;
+        for (string s : i) vec1[left_idx_clone++] = s;
     }
 }
 
@@ -249,13 +259,14 @@ void radixQuickSort(vector<string>& vec1, int level) {
     int right = vec1.size() - 1;
     
     vector<vector<string>> vec_res(128);
-    
+
+
+    int left_idx_clone = left;
     for (int i = 0; i < right - left + 1; ++i) {
         if (vec1[left + i].length() < level + 1) {
-            swap(vec1[left], vec1[i]);
-            ++left;   
+            swap(vec1[left_idx_clone], vec1[i]);
+            ++left_idx_clone;   
         } else {
-            char_comps++;
             vec_res[vec1[left + i][level]].push_back(vec1[left + i]);
         }
     }
@@ -265,13 +276,13 @@ void radixQuickSort(vector<string>& vec1, int level) {
     }
     
     for (auto i : vec_res) {
-        for (string s : i) vec1[left++] = s;
+        for (string s : i) vec1[left_idx_clone++] = s;
     }
 }
 
 class StringGenerator {
 private:
-    const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$:;^&*()-."; 
+    const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$:;^&*()-"; 
     mt19937 rng;
 
     string generateRandomString() {
